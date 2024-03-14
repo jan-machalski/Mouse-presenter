@@ -1,0 +1,17 @@
+﻿  app_presenter.cpp
+C:\Users\janma\Desktop\Presenter\app_presenter.cpp(165,9): warning C4311: 'type cast': pointer truncation from 'HINSTANCE' to 'int'
+C:\Users\janma\Desktop\Presenter\app_presenter.cpp(165,9): warning C4302: 'type cast': truncation from 'HINSTANCE' to 'int'
+C:\Users\janma\Desktop\Presenter\app_presenter.cpp(159,26): warning C4390: ';': empty controlled statement found; is this the intent?
+C:\Users\janma\Desktop\Presenter\app_presenter.cpp(152,10): warning C4101: 'bResult': unreferenced local variable
+  main.cpp
+C:\Users\janma\Desktop\Presenter\main.cpp(51,32): warning C4477: 'swprintf' : format string '%s' requires an argument of type 'wchar_t *', but variadic argument 2 has type 'const char *'
+  C:\Users\janma\Desktop\Presenter\main.cpp(51,32):
+  consider using '%hs' in the format string
+  C:\Users\janma\Desktop\Presenter\main.cpp(51,32):
+  consider using '%Ts' in the format string
+  C:\Users\janma\Desktop\Presenter\main.cpp(51,32):
+  this warning is based on non-standard semantics used by Visual C++
+  
+  Generating Code...
+C:\Users\janma\Desktop\Presenter\main.cpp(55,1): warning C4715: 'wWinMain': not all control paths return a value
+  Presenter.vcxproj -> C:\Users\janma\Desktop\Presenter\x64\Debug\Presenter.exe
