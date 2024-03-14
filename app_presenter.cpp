@@ -159,6 +159,7 @@ LRESULT app_presenter::window_proc(
 				if(ChooseColor(&ccl));
 					color = ccl.rgbResult;
 			}
+			break;
 			case ID_TRAY_INI_OPEN:
 			{
 				HINSTANCE hInstance = ShellExecute(NULL, L"open", L"settings.ini", NULL, NULL, SW_SHOWNORMAL);
@@ -166,6 +167,7 @@ LRESULT app_presenter::window_proc(
 					MessageBox(NULL, L"Nie mo¿na otworzyæ pliku .ini", L"B³¹d", MB_ICONERROR);
 				}
 			}
+			break;
 		}
 	}
 	case WM_HOTKEY:
