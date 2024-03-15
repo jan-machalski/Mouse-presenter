@@ -96,25 +96,34 @@ LRESULT app_presenter::window_proc(
 		POINT pos;
 		GetCursorPos(&pos);
 
+		HDC memDC = CreateCompatibleDC(hdc);
+		HBITMAP memBmp = CreateCompatibleBitmap(hdc, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+		HBITMAP oldBmp = reinterpret_cast<HBITMAP>(SelectObject(memDC, memBmp));
+
 		COLORREF backgroundColor = RGB(0, 0, 0);
 		RECT clientRect;
 		GetClientRect(window, &clientRect);
 
 		HBRUSH backgroundBrush = CreateSolidBrush(backgroundColor);
-		FillRect(hdc, &clientRect, backgroundBrush);
+		FillRect(memDC, &clientRect, backgroundBrush);
 
 		DeleteObject(backgroundBrush);
 
 		HBRUSH brush = CreateSolidBrush(color);
-		HBRUSH old_brush = (HBRUSH)SelectObject(hdc, brush);
+		HBRUSH old_brush = (HBRUSH)SelectObject(memDC, brush);
 		HPEN pen = CreatePen(PS_SOLID, 1, color);
-		HPEN old_pen = (HPEN)SelectObject(hdc, pen);
-		Ellipse(hdc, pos.x - radius, pos.y-radius, pos.x + radius, pos.y + radius);
+		HPEN old_pen = (HPEN)SelectObject(memDC, pen);
+		Ellipse(memDC, pos.x - radius, pos.y-radius, pos.x + radius, pos.y + radius);
 
-		SelectObject(hdc, old_brush);
-		SelectObject(hdc, old_pen);
+		SelectObject(memDC, old_brush);
+		SelectObject(memDC, old_pen);
 		DeleteObject(brush);
 		DeleteObject(pen);
+
+		BitBlt(hdc, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), memDC, 0, 0, SRCCOPY);
+		DeleteObject(SelectObject(memDC, oldBmp));
+		DeleteDC(memDC);
+
 
 		DeleteDC(hdc);
 		EndPaint(window, &ps);
