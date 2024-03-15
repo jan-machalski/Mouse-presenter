@@ -1,6 +1,8 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#define MAX_PATH 512
+
 class app_presenter
 {
 private:
@@ -21,12 +23,15 @@ private:
 	HWND m_main;
 	COLORREF color;
 	int radius;
-	COLORREF start_color = RGB(255, 255, 0);
-	int max_radius = 50;
-	int min_radius = 25;
-	int pulse_cycle_length = 2000;//ms
+	COLORREF start_color;
+	int max_radius;
+	int min_radius;
+	int pulse_cycle_length;//ms
 	int radius_diff;
 	bool pulsing;
+	void reload_config();
+	wchar_t* ini_path;
+	void get_ini_path();
 public:
 	app_presenter(HINSTANCE instance);
 	int run(int show_command);

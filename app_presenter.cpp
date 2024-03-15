@@ -9,6 +9,8 @@
 #define ID_TRAY_EXIT 11
 #define ID_TRAY_COLOR_PICKER 12
 #define ID_TRAY_INI_OPEN 13
+#define ID_TRAY_RELOAD_CONFIG 14
+
 
 std::wstring const app_presenter::s_class_name{ L"Presenter Window" };
 
@@ -136,6 +138,7 @@ LRESULT app_presenter::window_proc(
 			AppendMenu(hPopupMenu, MF_STRING, ID_TRAY_EXIT, L"Exit");
 			AppendMenu(hPopupMenu, MF_STRING, ID_TRAY_COLOR_PICKER, L"Choose color");
 			AppendMenu(hPopupMenu, MF_STRING, ID_TRAY_INI_OPEN, L"Open .ini file");
+			AppendMenu(hPopupMenu, MF_STRING, ID_TRAY_RELOAD_CONFIG, L"Reload config");
 
 			POINT pt;
 			GetCursorPos(&pt);
@@ -177,6 +180,9 @@ LRESULT app_presenter::window_proc(
 				}
 			}
 			break;
+			case ID_TRAY_RELOAD_CONFIG:
+				reload_config();
+				break;
 		}
 	}
 	case WM_HOTKEY:
@@ -227,14 +233,11 @@ app_presenter::app_presenter(HINSTANCE instance)
 {
 	register_class();
 
-	/*start_color = GetPrivateProfileInt(L"Settings", L"StartColor", RGB(0, 0, 0), L"settings.ini");
-	max_radius = GetPrivateProfileInt(L"Settings", L"MaxRadius", 0, L"settings.ini");
-	min_radius = GetPrivateProfileInt(L"Settings", L"MinRadius", 0, L"settings.ini");
-	pulse_cycle_length = GetPrivateProfileInt(L"Settings", L"PulseCycleLength", 0, L"settings.ini");*/
-
+	get_ini_path();
+	reload_config();
 	m_main = create_window();
 	color = start_color;
-	radius = 50;
+	radius = max_radius;
 	radius_diff = -1; 
 	pulsing = true;
 }
@@ -270,6 +273,28 @@ int app_presenter::run(int show_command)
 
 	Shell_NotifyIcon(NIM_DELETE, &nid);
 	return EXIT_SUCCESS;
+}
+
+void app_presenter::reload_config()
+{
+	int r = GetPrivateProfileInt(L"Settings", L"r", 255, ini_path);
+	int g = GetPrivateProfileInt(L"Settings", L"g", 255, ini_path);
+	int b = GetPrivateProfileInt(L"Settings", L"b", 0, ini_path);
+	start_color = RGB(r, g, b);
+	max_radius = GetPrivateProfileInt(L"Settings", L"MaxRadius", 50, ini_path);
+	min_radius = GetPrivateProfileInt(L"Settings", L"MinRadius", 25, ini_path);
+	pulse_cycle_length = GetPrivateProfileInt(L"Settings", L"PulseCycleLength", 2000, ini_path);
+}
+
+void app_presenter::get_ini_path()
+{
+	wchar_t buffer[MAX_PATH];
+	_wgetcwd(buffer, MAX_PATH);
+	size_t len1 = wcslen(buffer);
+	size_t len2 = wcslen(L"settings.ini");
+	ini_path = new wchar_t[len1 + len2 + 1];
+	wcscpy_s(ini_path, len1 + len2 + 1, buffer);
+	wcscat_s(ini_path, len1 + len2 + 1, L"settings.ini");
 }
 
 
